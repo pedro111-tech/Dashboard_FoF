@@ -515,7 +515,7 @@ footer {
     </div>
     <div class="hdrBadges">
       <div class="asofControl" id="asofControl"><span class="asofLabel">Data de referência</span><input type="date" id="asofInput" class="asofInput"/><button type="button" id="asofReset" class="asofReset" title="Voltar para a data mais recente">↺</button></div>
-      <div id="updatedAtBadge" class="lastDateBadge">Atualizado em: 13/07/2026 17:09:26</div>
+      <div id="updatedAtBadge" class="lastDateBadge">Atualizado em: 13/07/2026 17:19:50</div>
       <div id="lastDateBadge" class="lastDateBadge">Última cota: -</div>
     </div>
   </div>
@@ -2156,6 +2156,8 @@ const RESUMO_EXTRA_COLS = {
   acao:         ["ir","te"],
   fii:          ["vol"]
 };
+// Classes cujo benchmark realmente cai -> capture ratios fazem sentido:
+const RESUMO_CAPTURE_CLASSES = ["acao","fii"];
 function fmtRatio2(v){
   if(v === null || v === undefined || !Number.isFinite(v)) return "-";
   return v.toFixed(2);
@@ -2287,16 +2289,20 @@ function renderResumo3yTable(cls, dates, pxFunds, pxBench, benchName){
     { label:"% meses +",        get:s=>fmtPct(s.pctPos) },
     { label:"% meses −",   get:s=>fmtPct(s.pctNeg) },
     { label:"% > bench",        get:s=>fmtPct(s.pctAbove) },
-    { label:"% < bench",        get:s=>fmtPct(s.pctBelow) },
-    { label:"Capt. alta",       get:s=>fmtPct(s.capUp) },
-    { label:"Capt. baixa",      get:s=>fmtPct(s.capDown) },
-    { label:"CVaR 95%",         get:s=>fmtPct(s.cvar) }
+    { label:"% < bench",        get:s=>fmtPct(s.pctBelow) }
   ];
+  // Capture ratios so fazem sentido quando o benchmark cai (acao/FII);
+  // vs CDI (credito/multimercado) a captura de baixa e sempre vazia -> omitidas.
+  const captureCols = RESUMO_CAPTURE_CLASSES.includes(cls) ? [
+    { label:"Capt. alta",  get:s=>fmtPct(s.capUp) },
+    { label:"Capt. baixa", get:s=>fmtPct(s.capDown) }
+  ] : [];
+  const cvarCol = [ { label:"CVaR 95%", get:s=>fmtPct(s.cvar) } ];
   const extraCols = extraKeys.filter(k=>EXTRA_DEFS[k]).map(k=>{
     const d = EXTRA_DEFS[k];
     return { label:d.label, get:s => d.fmt==="pct" ? fmtPct(s[k]) : fmtRatio2(s[k]) };
   });
-  const cols = baseCols.concat(extraCols);
+  const cols = baseCols.concat(captureCols, cvarCol, extraCols);
   if(rows.length === 0){
     el.innerHTML = `<div class="hint" style="padding:10px;">Sem dados suficientes na janela de ${RESUMO_YEARS} anos.</div>`;
     return;
