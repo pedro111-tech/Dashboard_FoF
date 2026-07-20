@@ -197,13 +197,19 @@ h1 { margin:0; font-size:20px; font-weight:700; letter-spacing:-0.3px; color: va
 .aporteFloat.na { opacity:0.5; }
 .tbl th.aporteCol, .tbl td.aporteCell {
   border-left:2px solid var(--border);
-  text-align:right; font-variant-numeric:tabular-nums;
+  text-align:center !important;
+  font-variant-numeric:tabular-nums;
+  width:62px; min-width:62px; max-width:62px;
 }
 .tbl td.aporteCell { white-space:nowrap; }
 .tbl th.aporteCol {
-  color:var(--accent); text-align:center;
-  white-space:normal; word-break:normal;
-  font-size:0.8em; line-height:1.1; font-weight:600;
+  /* mesma fonte/estilo dos demais cabecalhos da tabela */
+  background:#e6e9ec;
+  color:#343a40;
+  font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.2px;
+  white-space:normal; word-break:normal; overflow-wrap:break-word;
+  line-height:1.2; padding:6px 4px;
 }
 
 /* ====== MAIN LAYOUT ====== */
@@ -558,7 +564,7 @@ footer {
     </div>
     <div class="hdrBadges">
       <div class="asofControl" id="asofControl"><span class="asofLabel">Data de referência</span><input type="date" id="asofInput" class="asofInput"/><button type="button" id="asofReset" class="asofReset" title="Voltar para a data mais recente">↺</button></div>
-      <div id="updatedAtBadge" class="lastDateBadge">Atualizado em: 20/07/2026 10:25:31</div>
+      <div id="updatedAtBadge" class="lastDateBadge">Atualizado em: 20/07/2026 10:43:47</div>
       <div id="lastDateBadge" class="lastDateBadge">Última cota: -</div>
       <button type="button" id="methodBtn" class="methodBtn" title="Metodologia dos cálculos">ⓘ Metodologia</button>
     </div>
